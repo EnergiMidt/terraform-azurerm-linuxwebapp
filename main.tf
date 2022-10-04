@@ -9,8 +9,15 @@ resource "azurerm_linux_web_app" "linux_web_app" {
   resource_group_name = var.resource_group.name
 
   service_plan_id = var.service_plan_id
-  site_config     = var.site_config
-  app_settings    = var.app_settings
+  dynamic "site_config" {
+    for_each = var.site_config
+    content {
+      # TODO: Implement the entire block.
+      namespace = site_config.value["always_on"] # (Optional) If this Linux Web App is Always On enabled. Defaults to true.
+    }
+  }
+
+  app_settings = var.app_settings
 
   tags = var.tags
 }
