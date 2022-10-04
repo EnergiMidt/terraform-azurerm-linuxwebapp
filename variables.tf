@@ -63,12 +63,9 @@ variable "site_config" {
 }
 
 variable "app_settings" {
-  description = "(Optional) A map of key-value pairs of App Settings."
+  description = "(Optional) A map of key-value pairs of App Settings as defined at [azurerm_linux_web_app](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
   type        = map(any)
-  default = {
-    # TODO: Implement this dynamic block.
-    always_on = true
-  }
+  default     = {}
 }
 
 variable "identity" {

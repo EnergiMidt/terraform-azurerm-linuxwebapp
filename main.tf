@@ -9,10 +9,8 @@ resource "azurerm_linux_web_app" "linux_web_app" {
   resource_group_name = var.resource_group.name
 
   service_plan_id = var.service_plan_id
-
-  site_config {}
-
-  app_settings = var.app_settings
+  site_config     = var.site_config
+  app_settings    = var.app_settings
 
   tags = var.tags
 }
