@@ -64,8 +64,11 @@ variable "site_config" {
 
 variable "app_settings" {
   description = "(Optional) A map of key-value pairs of App Settings."
-  type        = map(string, string)
-  default     = {}
+  type        = map(any)
+  default = {
+    # TODO: Implement this dynamic block.
+    always_on = true
+  }
 }
 
 variable "identity" {
