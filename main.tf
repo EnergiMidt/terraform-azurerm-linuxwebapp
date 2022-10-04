@@ -13,7 +13,7 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     for_each = var.site_config
     content {
       # TODO: Implement the entire block.
-      always_on             = site_config.value["always_on"]             # (Optional) If this Linux Web App is Always On enabled. Defaults to true.
+      always_on             = site_config.value["always_on"]             # (Optional) If this Linux Web App is Always On enabled. Defaults to `true`.
       api_definition_url    = site_config.value["api_definition_url"]    # (Optional) The URL to the API Definition for this Linux Web App.
       api_management_api_id = site_config.value["api_management_api_id"] # (Optional) The API Management API ID this Linux Web App is associated with.
       app_command_line      = site_config.value["app_command_line"]      # (Optional) The App command line to launch.

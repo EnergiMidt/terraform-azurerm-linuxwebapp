@@ -59,7 +59,9 @@ variable "service_plan_id" {
 variable "site_config" {
   description = "(Required) A site_config block as defined at [azurerm_linux_web_app](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
   type        = any
-  default     = {}
+  default = {
+    always_on = true # (Optional) If this Linux Web App is Always On enabled. Defaults to true.
+  }
 }
 
 variable "app_settings" {
