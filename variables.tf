@@ -56,10 +56,108 @@ variable "service_plan_id" {
   type        = string
 }
 
+# TODO: Implement below dynamic block in main.tf file.
 variable "site_config" {
-  description = "(Required) A site_config block as defined at [azurerm_linux_web_app](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
-  type        = any
-  default     = {}
+  description = "(Optional) A `site_config` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
+  type = object(
+    {
+      always_on             = optional(bool)   # (Optional) If this Linux Web App is Always On enabled. Defaults to `true`. Note: `always_on` must be explicitly set to `false` when using `Free`, `F1`, `D1`, or `Shared` Service Plans.
+      api_definition_url    = optional(string) # (Optional) The URL to the API Definition for this Linux Web App.
+      api_management_api_id = optional(string) # (Optional) The API Management API ID this Linux Web App is associated with.
+      app_command_line      = optional(string) # (Optional) The App command line to launch.
+
+      application_stack = optional(object({
+        docker_image        = optional(string) # (Optional) The Docker image reference, including repository host as needed.
+        docker_image_tag    = optional(string) # (Optional) The image Tag to use. e.g. `latest`.
+        dotnet_version      = optional(string) # (Optional) The version of .NET to use. Possible values include `3.1`, `5.0`, and `6.0`.
+        java_server         = optional(string) # (Optional) The Java server type. Possible values include `JAVA`, `TOMCAT`, and `JBOSSEAP`. Note: `JBOSSEAP` requires a Premium Service Plan SKU to be a valid option.
+        java_server_version = optional(string) # (Optional) The Version of the `java_server` to use.
+        java_version        = optional(string) # (Optional) The Version of Java to use. Supported versions of Java vary depending on the `java_server` and `java_server_version`, as well as security and fixes to major versions. Please see Azure documentation for the latest information. Note: The valid version combinations for `java_version`, `java_server` and `java_server_version` can be checked from the command line via `az webapp list-runtimes --linux`.
+        node_version        = optional(string) # (Optional) The version of Node to run. Possible values include `12-lts`, `14-lts`, and `16-lts`. This property conflicts with `java_version`. Note: 10.x versions have been/are being deprecated so may cease to work for new resources in the future and may be removed from the provider.
+        php_version         = optional(string) # (Optional) The version of PHP to run. Possible values include `7.4`, and `8.0`. Note: versions `5.6` and `7.2` are deprecated and will be removed from the provider in a future version.
+        python_version      = optional(string) # (Optional) The version of Python to run. Possible values include `3.7`, `3.8`, `3.9` and `3.10`.
+        ruby_version        = optional(string) # (Optional) Te version of Ruby to run. Possible values include `2.6` and `2.7`.
+      }))                                      # (Optional) A `application_stack` block as defined above.
+
+      auto_heal_enabled = optional(bool) # (Optional) Should Auto heal rules be enabled? Required with `auto_heal_setting`.
+
+      auto_heal_setting = optional(object({
+        action = optional(object({
+          action_type                    = string           # (Required) Predefined action to be taken to an Auto Heal trigger. Possible values include: `Recycle`.
+          minimum_process_execution_time = optional(string) # (Optional) The minimum amount of time in `hh:mm:ss` the Linux Web App must have been running before the defined action will be run in the event of a trigger.
+        }))                                                 # (Optional) A `action` block as defined above.
+        trigger = optional(object(
+          {
+            requests = optional(object({
+              count    = number
+              interval = string
+            })) # (Optional) A requests block as defined above.
+            slow_request = optional(list(
+              object(
+                {
+                  count      = number
+                  interval   = string
+                  time_taken = string
+                  path       = optional(string)
+                }
+              )
+            )) # (Optional) One or more slow_request blocks as defined above.
+            status_code = optional(list(
+              object(
+                {
+                  count             = number
+                  interval          = string
+                  status_code_range = string
+                  path              = optional(string)
+                  sub_status        = optional(string)
+                  win32_status      = optional(string)
+                }
+              )
+            )) # (Optional) One or more status_code blocks as defined above.
+          }
+        )) # (Optional) A `trigger` block as defined above.
+      }))  # (Optional) A `auto_heal_setting` block as defined above. Required with `auto_heal`.
+
+      #     container_registry_managed_identity_client_id = optional(string) # (Optional) The Client ID of the Managed Service Identity to use for connections to the Azure Container Registry.
+      #     container_registry_use_managed_identity       = optional(string) # (Optional) Should connections for Azure Container Registry use Managed Identity.
+      #     # cors = optional(object(
+      #     # ))                                                         # (Optional) A `cors` block as defined above.
+      #     default_documents                 = optional(list(string)) # (Optional) Specifies a list of Default Documents for the Linux Web App.
+      #     ftps_state                        = optional(string)       # (Optional) The State of FTP / FTPS service. Possible values include `AllAllowed`, `FtpsOnly`, and `Disabled`. Note: Azure defaults this value to `AllAllowed`, however, in the interests of security Terraform will default this to `Disabled` to ensure the user makes a conscious choice to enable it.
+      #     health_check_path                 = optional(string)       # (Optional) The path to the Health Check.
+      #     health_check_eviction_time_in_min = optional(string)       # (Optional) The amount of time in minutes that a node can be unhealthy before being removed from the load balancer. Possible values are between `2` and `10`. Only valid in conjunction with `health_check_path`.
+      #     http2_enabled                     = optional(bool)         # (Optional) Should the HTTP2 be enabled?
+      #     # ip_restriction                    = optional([object{
+      #     # }])       # (Optional) One or more `ip_restriction` blocks as defined above.
+      #     load_balancing_mode      = optional(string) # (Optional) The Site load balancing. Possible values include: `WeightedRoundRobin`, `LeastRequests`, `LeastResponseTime`, `WeightedTotalTraffic`, `RequestHash`, `PerSiteRoundRobin`. Defaults to `LeastRequests` if omitted.
+      #     local_mysql_enabled      = optional(bool)   # (Optional) Use Local MySQL. Defaults to `false`.
+      #     managed_pipeline_mode    = optional(string) # (Optional) Managed pipeline mode. Possible values include `Integrated`, and `Classic`.
+      #     minimum_tls_version      = optional(string) # (Optional) The configures the minimum version of TLS required for SSL requests. Possible values include: `1.0`, `1.1`, and  `1.2`. Defaults to `1.2`.
+      #     remote_debugging         = optional(bool)   # (Optional) Should Remote Debugging be enabled? Defaults to `false`.
+      #     remote_debugging_version = optional(string) # (Optional) The Remote Debugging Version. Possible values include `VS2017` and `VS2019`
+      #     # scm_ip_restriction                = optional([object{
+      #     # }])       # (Optional) One or more `scm_ip_restriction` blocks as defined above.
+      #     scm_minimum_tls_version     = optional(string) # (Optional) The configures the minimum version of TLS required for SSL requests to the SCM site Possible values include: `1.0`, `1.1`, and  `1.2`. Defaults to `1.2`.
+      #     scm_use_main_ip_restriction = optional(bool)   # (Optional) Should the Linux Web App `ip_restriction` configuration be used for the SCM also.
+      #     use_32_bit_worker           = optional(bool)   # (Optional) Should the Linux Web App use a 32-bit worker? Defaults to `true`.
+      #     vnet_route_all_enabled      = optional(bool)   # (Optional) Should all outbound traffic have NAT Gateways, Network Security Groups and User Defined Routes applied? Defaults to `false`.
+      #     websockets_enabled          = optional(bool)   # (Optional) Should Web Sockets be enabled? Defaults to `false`.
+      #     worker_count                = optional(number) # (Optional) The number of Workers for this Linux App Service.
+    }
+  )
+  default = {
+    always_on             = true
+    api_definition_url    = null
+    api_management_api_id = null
+    app_command_line      = null
+    application_stack = {
+      docker_image_tag = "latest"
+    }
+
+    auto_heal_enabled = false
+    auto_heal_setting = {}
+
+  }
 }
 
 variable "app_settings" {
@@ -68,6 +166,68 @@ variable "app_settings" {
   default     = {}
 }
 
+# TODO: Implement below dynamic block in main.tf file.
+variable "auth_settings" {
+  description = "(Optional) A `auth_settings` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
+  type        = map(any)
+  default     = {}
+}
+
+# TODO: Implement below dynamic block in main.tf file.
+variable "backup" {
+  description = "(Optional) A `backup` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
+  type        = map(any)
+  default     = {}
+}
+
+variable "client_affinity_enabled" {
+  description = "(Optional) Should Client Affinity be enabled?"
+  type        = bool
+  default     = false
+}
+
+variable "client_certificate_enabled" {
+  description = "(Optional) Should Client Certificates be enabled?"
+  type        = bool
+  default     = false
+}
+
+variable "client_certificate_mode" {
+  description = "(Optional) The Client Certificate mode. Possible values are `Required`, `Optional`, and `OptionalInteractiveUser`. This property has no effect when `client_certificate_enabled` is `false`."
+  type        = string
+  default     = null
+  validation {
+    condition     = can(regex("^(Required|Optional|OptionalInteractiveUser)$", var.client_certificate_mode))
+    error_message = "Possible values are `Required`, `Optional`, and `OptionalInteractiveUser`."
+  }
+}
+
+variable "client_certificate_exclusion_paths" {
+  description = "(Optional) Paths to exclude when using client certificates, separated by `;`."
+  type        = string
+  default     = null
+}
+
+# TODO: Implement below dynamic block in main.tf file.
+variable "connection_string" {
+  description = "(Optional) A `connection_string` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
+  type        = map(any)
+  default     = {}
+}
+
+variable "enabled" {
+  description = "(Optional) Should the Linux Web App be enabled? Defaults to `true`."
+  type        = bool
+  default     = true
+}
+
+variable "https_only" {
+  description = "(Optional) Should the Linux Web App require HTTPS connections."
+  type        = bool
+  default     = false
+}
+
+# TODO: Implement below dynamic block in main.tf file.
 variable "identity" {
   default = {
     type = "SystemAssigned"
@@ -80,6 +240,46 @@ variable "identity" {
     }
   )
 }
+
+variable "key_vault_reference_identity_id" {
+  description = "(Optional) The User Assigned Identity ID used for accessing KeyVault secrets. The identity must be assigned to the application in the `identity` block. [For more information see - Access vaults with a user-assigned identity](https://docs.microsoft.com/azure/app-service/app-service-key-vault-references#access-vaults-with-a-user-assigned-identity)."
+  type        = string
+  default     = null
+}
+
+# TODO: Implement below dynamic block in main.tf file.
+variable "logs" {
+  description = "(Optional) A `logs` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
+  type        = map(any)
+  default     = {}
+}
+
+# TODO: Implement below dynamic block in main.tf file.
+variable "storage_account" {
+  description = "(Optional) A `storage_account` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
+  type        = map(any)
+  default     = {}
+}
+
+# TODO: Implement below dynamic block in main.tf file.
+variable "sticky_settings" {
+  description = "(Optional) A `sticky_settings` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
+  type        = map(any)
+  default     = {}
+}
+
+variable "virtual_network_subnet_id" {
+  description = "(Optional) The subnet id which will be used by this Web App for [regional virtual network integration](https://docs.microsoft.com/en-us/azure/app-service/overview-vnet-integration#regional-virtual-network-integration)."
+  type        = string
+  default     = null
+}
+
+variable "zip_deploy_file" {
+  description = "(Optional) The local path and filename of the Zip packaged application to deploy to this Linux Web App."
+  type        = string
+  default     = null
+}
+
 
 variable "tags" {
   description = "(Optional) A mapping of tags to assign to the resource."
