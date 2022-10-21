@@ -95,6 +95,13 @@ resource "azurerm_linux_web_app" "linux_web_app" {
           support_credentials = cors.value.support_credentials
         }
       }
+
+      default_documents                 = site_config.value.default_documents
+      ftps_state                        = site_config.value.ftps_state
+      health_check_path                 = site_config.value.health_check_path
+      health_check_eviction_time_in_min = site_config.value.health_check_eviction_time_in_min
+      http2_enabled                     = site_config.value.http2_enabled
+
     }
   }
 

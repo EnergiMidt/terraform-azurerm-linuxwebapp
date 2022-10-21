@@ -128,11 +128,11 @@ variable "site_config" {
         support_credentials = optional(bool) # (Optional) Whether CORS requests with credentials are allowed. Defaults to `false`.
       }))                                    # (Optional) A `cors` block as defined above.
 
-      #     default_documents                 = optional(list(string)) # (Optional) Specifies a list of Default Documents for the Linux Web App.
-      #     ftps_state                        = optional(string)       # (Optional) The State of FTP / FTPS service. Possible values include `AllAllowed`, `FtpsOnly`, and `Disabled`. Note: Azure defaults this value to `AllAllowed`, however, in the interests of security Terraform will default this to `Disabled` to ensure the user makes a conscious choice to enable it.
-      #     health_check_path                 = optional(string)       # (Optional) The path to the Health Check.
-      #     health_check_eviction_time_in_min = optional(string)       # (Optional) The amount of time in minutes that a node can be unhealthy before being removed from the load balancer. Possible values are between `2` and `10`. Only valid in conjunction with `health_check_path`.
-      #     http2_enabled                     = optional(bool)         # (Optional) Should the HTTP2 be enabled?
+      default_documents                 = optional(list(string)) # (Optional) Specifies a list of Default Documents for the Linux Web App.
+      ftps_state                        = optional(string)       # (Optional) The State of FTP / FTPS service. Possible values include `AllAllowed`, `FtpsOnly`, and `Disabled`. Note: Azure defaults this value to `AllAllowed`, however, in the interests of security Terraform will default this to `Disabled` to ensure the user makes a conscious choice to enable it.
+      health_check_path                 = optional(string)       # (Optional) The path to the Health Check.
+      health_check_eviction_time_in_min = optional(number)       # (Optional) The amount of time in minutes that a node can be unhealthy before being removed from the load balancer. Possible values are between `2` and `10`. Only valid in conjunction with `health_check_path`.
+      http2_enabled                     = optional(bool)         # (Optional) Should the HTTP2 be enabled?
       #     # ip_restriction                    = optional([object{
       #     # }])       # (Optional) One or more `ip_restriction` blocks as defined above.
       #     load_balancing_mode      = optional(string) # (Optional) The Site load balancing. Possible values include: `WeightedRoundRobin`, `LeastRequests`, `LeastResponseTime`, `WeightedTotalTraffic`, `RequestHash`, `PerSiteRoundRobin`. Defaults to `LeastRequests` if omitted.
@@ -167,6 +167,12 @@ variable "site_config" {
       allowed_origins     = []
       support_credentials = false
     }
+    default_documents                 = []
+    ftps_state                        = null
+    health_check_path                 = null
+    health_check_eviction_time_in_min = null
+    http2_enabled                     = false
+
   }
 }
 
