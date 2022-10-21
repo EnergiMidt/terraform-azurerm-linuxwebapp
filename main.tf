@@ -124,6 +124,43 @@ resource "azurerm_linux_web_app" "linux_web_app" {
           virtual_network_subnet_id = ip_restriction.value.virtual_network_subnet_id
         }
       }
+
+      load_balancing_mode      = site_config.value.load_balancing_mode
+      local_mysql_enabled      = site_config.value.local_mysql_enabled
+      managed_pipeline_mode    = site_config.value.managed_pipeline_mode
+      minimum_tls_version      = site_config.value.minimum_tls_version
+      remote_debugging_enabled = site_config.value.remote_debugging_enabled # TODO: An argument named "remote_debugging" is not expected here. https://github.com/hashicorp/terraform-provider-azurerm/blob/main/CHANGELOG.md
+      remote_debugging_version = site_config.value.remote_debugging_version
+
+      dynamic "scm_ip_restriction" {
+        for_each = lookup(site_config.value, "scm_ip_restriction", {})
+        content {
+          action = scm_ip_restriction.value.action
+
+          dynamic "headers" {
+            for_each = lookup(scm_ip_restriction.value, "headers", {})
+            content {
+              x_azure_fdid      = lookup(headers.value, "x_azure_fdid", [])
+              x_fd_health_probe = lookup(headers.value, "x_fd_health_probe", null)
+              x_forwarded_for   = lookup(headers.value, "x_forwarded_for", [])
+              x_forwarded_host  = lookup(headers.value, "x_forwarded_host", [])
+            }
+          }
+
+          ip_address                = scm_ip_restriction.value.ip_address
+          name                      = scm_ip_restriction.value.name
+          priority                  = scm_ip_restriction.value.priority
+          service_tag               = scm_ip_restriction.value.service_tag
+          virtual_network_subnet_id = scm_ip_restriction.value.virtual_network_subnet_id
+        }
+      }
+
+      scm_minimum_tls_version     = site_config.value.scm_minimum_tls_version
+      scm_use_main_ip_restriction = site_config.value.scm_use_main_ip_restriction
+      use_32_bit_worker           = site_config.value.use_32_bit_worker
+      vnet_route_all_enabled      = site_config.value.vnet_route_all_enabled
+      websockets_enabled          = site_config.value.websockets_enabled
+      worker_count                = site_config.value.worker_count
     }
   }
 

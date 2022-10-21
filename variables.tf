@@ -153,20 +153,38 @@ variable "site_config" {
         # Note: One and only one of `ip_address`, `service_tag` or `virtual_network_subnet_id` must be specified.
       })) # (Optional) One or more `ip_restriction` blocks as defined above.
 
-      #     load_balancing_mode      = optional(string) # (Optional) The Site load balancing. Possible values include: `WeightedRoundRobin`, `LeastRequests`, `LeastResponseTime`, `WeightedTotalTraffic`, `RequestHash`, `PerSiteRoundRobin`. Defaults to `LeastRequests` if omitted.
-      #     local_mysql_enabled      = optional(bool)   # (Optional) Use Local MySQL. Defaults to `false`.
-      #     managed_pipeline_mode    = optional(string) # (Optional) Managed pipeline mode. Possible values include `Integrated`, and `Classic`.
-      #     minimum_tls_version      = optional(string) # (Optional) The configures the minimum version of TLS required for SSL requests. Possible values include: `1.0`, `1.1`, and  `1.2`. Defaults to `1.2`.
-      #     remote_debugging         = optional(bool)   # (Optional) Should Remote Debugging be enabled? Defaults to `false`.
-      #     remote_debugging_version = optional(string) # (Optional) The Remote Debugging Version. Possible values include `VS2017` and `VS2019`
-      #     # scm_ip_restriction                = optional([object{
-      #     # }])       # (Optional) One or more `scm_ip_restriction` blocks as defined above.
-      #     scm_minimum_tls_version     = optional(string) # (Optional) The configures the minimum version of TLS required for SSL requests to the SCM site Possible values include: `1.0`, `1.1`, and  `1.2`. Defaults to `1.2`.
-      #     scm_use_main_ip_restriction = optional(bool)   # (Optional) Should the Linux Web App `ip_restriction` configuration be used for the SCM also.
-      #     use_32_bit_worker           = optional(bool)   # (Optional) Should the Linux Web App use a 32-bit worker? Defaults to `true`.
-      #     vnet_route_all_enabled      = optional(bool)   # (Optional) Should all outbound traffic have NAT Gateways, Network Security Groups and User Defined Routes applied? Defaults to `false`.
-      #     websockets_enabled          = optional(bool)   # (Optional) Should Web Sockets be enabled? Defaults to `false`.
-      #     worker_count                = optional(number) # (Optional) The number of Workers for this Linux App Service.
+      load_balancing_mode      = optional(string) # (Optional) The Site load balancing. Possible values include: `WeightedRoundRobin`, `LeastRequests`, `LeastResponseTime`, `WeightedTotalTraffic`, `RequestHash`, `PerSiteRoundRobin`. Defaults to `LeastRequests` if omitted.
+      local_mysql_enabled      = optional(bool)   # (Optional) Use Local MySQL. Defaults to `false`.
+      managed_pipeline_mode    = optional(string) # (Optional) Managed pipeline mode. Possible values include `Integrated`, and `Classic`.
+      minimum_tls_version      = optional(string) # (Optional) The configures the minimum version of TLS required for SSL requests. Possible values include: `1.0`, `1.1`, and  `1.2`. Defaults to `1.2`.
+      remote_debugging_enabled = optional(bool)   # (Optional) Should Remote Debugging be enabled? Defaults to `false`.
+      remote_debugging_version = optional(string) # (Optional) The Remote Debugging Version. Possible values include `VS2017` and `VS2019`
+
+      scm_ip_restriction = optional(object({
+        action = optional(string) # (Optional) The action to take. Possible values are `Allow` or `Deny`.
+        headers = optional(object(
+          {
+            x_azure_fdid      = optional(list(string)) # (Optional) Specifies a list of Azure Front Door IDs.
+            x_fd_health_probe = optional(bool)         # (Optional) Specifies if a Front Door Health Probe should be expected.
+            x_forwarded_for   = optional(list(string)) # (Optional) Specifies a list of addresses for which matching should be applied. Omitting this value means allow any.
+            x_forwarded_host  = optional(list(string)) # (Optional) Specifies a list of Hosts for which matching should be applied.
+            # Note: Please see the [official Azure Documentation](https://docs.microsoft.com/azure/app-service/app-service-ip-restrictions#filter-by-http-header) for details on using header filtering.
+          }
+        ))                                           # (Optional) A `headers` block as defined above.
+        ip_address                = optional(string) # (Optional) The CIDR notation of the IP or IP Range to match. For example: `10.0.0.0/24` or `192.168.10.1/32`.
+        name                      = optional(string) # (Optional) The name which should be used for this `ip_restriction`.
+        priority                  = optional(string) # (Optional) The priority value of this `ip_restriction`.
+        service_tag               = optional(string) # (Optional) The Service Tag used for this IP Restriction.
+        virtual_network_subnet_id = optional(string) # (Optional) The Virtual Network Subnet ID used for this IP Restriction.
+        # Note: One and only one of `ip_address`, `service_tag` or `virtual_network_subnet_id` must be specified.
+      })) # (Optional) One or more `scm_ip_restriction` blocks as defined above.
+
+      scm_minimum_tls_version     = optional(string) # (Optional) The configures the minimum version of TLS required for SSL requests to the SCM site Possible values include: `1.0`, `1.1`, and  `1.2`. Defaults to `1.2`.
+      scm_use_main_ip_restriction = optional(bool)   # (Optional) Should the Linux Web App `ip_restriction` configuration be used for the SCM also.
+      use_32_bit_worker           = optional(bool)   # (Optional) Should the Linux Web App use a 32-bit worker? Defaults to `true`.
+      vnet_route_all_enabled      = optional(bool)   # (Optional) Should all outbound traffic have NAT Gateways, Network Security Groups and User Defined Routes applied? Defaults to `false`.
+      websockets_enabled          = optional(bool)   # (Optional) Should Web Sockets be enabled? Defaults to `false`.
+      worker_count                = optional(number) # (Optional) The number of Workers for this Linux App Service.
     }
   )
   default = {
@@ -191,6 +209,19 @@ variable "site_config" {
     health_check_eviction_time_in_min = null
     http2_enabled                     = false
     ip_restriction                    = null
+    load_balancing_mode               = null
+    local_mysql_enabled               = null
+    managed_pipeline_mode             = null
+    minimum_tls_version               = null
+    remote_debugging_enabled          = null
+    remote_debugging_version          = null
+    scm_ip_restriction                = null
+    scm_minimum_tls_version           = null
+    scm_use_main_ip_restriction       = null
+    use_32_bit_worker                 = null
+    vnet_route_all_enabled            = null
+    websockets_enabled                = null
+    worker_count                      = null
   }
 }
 
