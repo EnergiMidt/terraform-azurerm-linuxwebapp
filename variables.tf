@@ -133,8 +133,26 @@ variable "site_config" {
       health_check_path                 = optional(string)       # (Optional) The path to the Health Check.
       health_check_eviction_time_in_min = optional(number)       # (Optional) The amount of time in minutes that a node can be unhealthy before being removed from the load balancer. Possible values are between `2` and `10`. Only valid in conjunction with `health_check_path`.
       http2_enabled                     = optional(bool)         # (Optional) Should the HTTP2 be enabled?
-      #     # ip_restriction                    = optional([object{
-      #     # }])       # (Optional) One or more `ip_restriction` blocks as defined above.
+
+      ip_restriction = optional(object({
+        action = optional(string) # (Optional) The action to take. Possible values are `Allow` or `Deny`.
+        headers = optional(object(
+          {
+            x_azure_fdid      = optional(list(string)) # (Optional) Specifies a list of Azure Front Door IDs.
+            x_fd_health_probe = optional(bool)         # (Optional) Specifies if a Front Door Health Probe should be expected.
+            x_forwarded_for   = optional(list(string)) # (Optional) Specifies a list of addresses for which matching should be applied. Omitting this value means allow any.
+            x_forwarded_host  = optional(list(string)) # (Optional) Specifies a list of Hosts for which matching should be applied.
+            # Note: Please see the [official Azure Documentation](https://docs.microsoft.com/azure/app-service/app-service-ip-restrictions#filter-by-http-header) for details on using header filtering.
+          }
+        ))                                           # (Optional) A `headers` block as defined above.
+        ip_address                = optional(string) # (Optional) The CIDR notation of the IP or IP Range to match. For example: `10.0.0.0/24` or `192.168.10.1/32`.
+        name                      = optional(string) # (Optional) The name which should be used for this `ip_restriction`.
+        priority                  = optional(string) # (Optional) The priority value of this `ip_restriction`.
+        service_tag               = optional(string) # (Optional) The Service Tag used for this IP Restriction.
+        virtual_network_subnet_id = optional(string) # (Optional) The Virtual Network Subnet ID used for this IP Restriction.
+        # Note: One and only one of `ip_address`, `service_tag` or `virtual_network_subnet_id` must be specified.
+      })) # (Optional) One or more `ip_restriction` blocks as defined above.
+
       #     load_balancing_mode      = optional(string) # (Optional) The Site load balancing. Possible values include: `WeightedRoundRobin`, `LeastRequests`, `LeastResponseTime`, `WeightedTotalTraffic`, `RequestHash`, `PerSiteRoundRobin`. Defaults to `LeastRequests` if omitted.
       #     local_mysql_enabled      = optional(bool)   # (Optional) Use Local MySQL. Defaults to `false`.
       #     managed_pipeline_mode    = optional(string) # (Optional) Managed pipeline mode. Possible values include `Integrated`, and `Classic`.
@@ -172,7 +190,7 @@ variable "site_config" {
     health_check_path                 = null
     health_check_eviction_time_in_min = null
     http2_enabled                     = false
-
+    ip_restriction                    = null
   }
 }
 

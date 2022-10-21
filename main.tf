@@ -102,6 +102,28 @@ resource "azurerm_linux_web_app" "linux_web_app" {
       health_check_eviction_time_in_min = site_config.value.health_check_eviction_time_in_min
       http2_enabled                     = site_config.value.http2_enabled
 
+      dynamic "ip_restriction" {
+        for_each = lookup(site_config.value, "ip_restriction", {})
+        content {
+          action = ip_restriction.value.action
+
+          dynamic "headers" {
+            for_each = lookup(ip_restriction.value, "headers", {})
+            content {
+              x_azure_fdid      = lookup(headers.value, "x_azure_fdid", [])
+              x_fd_health_probe = lookup(headers.value, "x_fd_health_probe", null)
+              x_forwarded_for   = lookup(headers.value, "x_forwarded_for", [])
+              x_forwarded_host  = lookup(headers.value, "x_forwarded_host", [])
+            }
+          }
+
+          ip_address                = ip_restriction.value.ip_address
+          name                      = ip_restriction.value.name
+          priority                  = ip_restriction.value.priority
+          service_tag               = ip_restriction.value.service_tag
+          virtual_network_subnet_id = ip_restriction.value.virtual_network_subnet_id
+        }
+      }
     }
   }
 
