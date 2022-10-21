@@ -129,7 +129,7 @@ resource "azurerm_linux_web_app" "linux_web_app" {
       local_mysql_enabled      = site_config.value.local_mysql_enabled
       managed_pipeline_mode    = site_config.value.managed_pipeline_mode
       minimum_tls_version      = site_config.value.minimum_tls_version
-      remote_debugging_enabled = site_config.value.remote_debugging_enabled # TODO: An argument named "remote_debugging" is not expected here. https://github.com/hashicorp/terraform-provider-azurerm/blob/main/CHANGELOG.md
+      remote_debugging_enabled = site_config.value.remote_debugging_enabled
       remote_debugging_version = site_config.value.remote_debugging_version
 
       dynamic "scm_ip_restriction" {

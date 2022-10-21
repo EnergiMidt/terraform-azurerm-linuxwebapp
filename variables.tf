@@ -188,40 +188,40 @@ variable "site_config" {
     }
   )
   default = {
-    always_on             = true
-    api_definition_url    = null
-    api_management_api_id = null
-    app_command_line      = null
-    application_stack = {
-      docker_image_tag = "latest"
-    }
-    auto_heal_enabled                             = false
-    auto_heal_setting                             = {}
-    container_registry_managed_identity_client_id = null
-    container_registry_use_managed_identity       = null
-    cors = {
-      allowed_origins     = []
-      support_credentials = false
-    }
-    default_documents                 = []
-    ftps_state                        = null
-    health_check_path                 = null
-    health_check_eviction_time_in_min = null
-    http2_enabled                     = false
-    ip_restriction                    = null
-    load_balancing_mode               = null
-    local_mysql_enabled               = null
-    managed_pipeline_mode             = null
-    minimum_tls_version               = null
-    remote_debugging_enabled          = null
-    remote_debugging_version          = null
-    scm_ip_restriction                = null
-    scm_minimum_tls_version           = null
-    scm_use_main_ip_restriction       = null
-    use_32_bit_worker                 = null
-    vnet_route_all_enabled            = null
-    websockets_enabled                = null
-    worker_count                      = null
+    always_on = true
+    # api_definition_url    = null
+    # api_management_api_id = null
+    # app_command_line      = null
+    # application_stack = {
+    #   docker_image_tag = "latest"
+    # }
+    # auto_heal_enabled                             = false
+    # auto_heal_setting                             = {}
+    # container_registry_managed_identity_client_id = null
+    # container_registry_use_managed_identity       = null
+    # cors = {
+    #   allowed_origins     = []
+    #   support_credentials = false
+    # }
+    # default_documents                 = []
+    # ftps_state                        = null
+    # health_check_path                 = null
+    # health_check_eviction_time_in_min = null
+    # http2_enabled                     = false
+    # ip_restriction                    = null
+    # load_balancing_mode               = null
+    # local_mysql_enabled               = null
+    # managed_pipeline_mode             = null
+    # minimum_tls_version               = null
+    # remote_debugging_enabled          = null
+    # remote_debugging_version          = null
+    # scm_ip_restriction                = null
+    # scm_minimum_tls_version           = null
+    # scm_use_main_ip_restriction       = null
+    # use_32_bit_worker                 = null
+    # vnet_route_all_enabled            = null
+    # websockets_enabled                = null
+    # worker_count                      = null
   }
 }
 
