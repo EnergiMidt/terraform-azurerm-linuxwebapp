@@ -88,29 +88,31 @@ variable "site_config" {
         }))                                                 # (Optional) A `action` block as defined above.
         trigger = optional(object(
           {
-            requests = optional(object({
-              count    = number
-              interval = string
-            })) # (Optional) A requests block as defined above.
+            requests = optional(object(
+              {
+                count    = number # (Required) The number of requests in the specified `interval` to trigger this rule.
+                interval = string # (Required) The interval in `hh:mm:ss`.
+              }
+            )) # (Optional) A requests block as defined above.
             slow_request = optional(list(
               object(
                 {
-                  count      = number
-                  interval   = string
-                  time_taken = string
-                  path       = optional(string)
+                  count      = number           # (Required) The number of Slow Requests in the time `interval` to trigger this rule.
+                  interval   = string           # (Required) The time interval in the form `hh:mm:ss`.
+                  time_taken = string           # (Required) The threshold of time passed to qualify as a Slow Request in `hh:mm:ss`.
+                  path       = optional(string) # (Optional) The path for which this slow request rule applies.
                 }
               )
             )) # (Optional) One or more slow_request blocks as defined above.
             status_code = optional(list(
               object(
                 {
-                  count             = number
-                  interval          = string
-                  status_code_range = string
-                  path              = optional(string)
-                  sub_status        = optional(string)
-                  win32_status      = optional(string)
+                  count             = number           # (Required) The number of occurrences of the defined `status_code` in the specified `interval` on which to trigger this rule.
+                  interval          = string           # (Required) The time interval in the form `hh:mm:ss`.
+                  status_code_range = string           # (Required) The status code for this rule, accepts single status codes and status code ranges. e.g. `500` or `400-499`. Possible values are integers between `101` and `599`.
+                  path              = optional(string) # (Optional) The path to which this rule status code applies.
+                  sub_status        = optional(string) # (Optional) The Request Sub Status of the Status Code.
+                  win32_status      = optional(string) # (Optional) The Win32 Status Code of the Request.
                 }
               )
             )) # (Optional) One or more status_code blocks as defined above.
@@ -118,10 +120,14 @@ variable "site_config" {
         )) # (Optional) A `trigger` block as defined above.
       }))  # (Optional) A `auto_heal_setting` block as defined above. Required with `auto_heal`.
 
-      #     container_registry_managed_identity_client_id = optional(string) # (Optional) The Client ID of the Managed Service Identity to use for connections to the Azure Container Registry.
-      #     container_registry_use_managed_identity       = optional(string) # (Optional) Should connections for Azure Container Registry use Managed Identity.
-      #     # cors = optional(object(
-      #     # ))                                                         # (Optional) A `cors` block as defined above.
+      container_registry_managed_identity_client_id = optional(string) # (Optional) The Client ID of the Managed Service Identity to use for connections to the Azure Container Registry.
+      container_registry_use_managed_identity       = optional(string) # (Optional) Should connections for Azure Container Registry use Managed Identity.
+
+      cors = optional(object({
+        allowed_origins     = list(string)   # (Required) Specifies a list of origins that should be allowed to make cross-origin calls.
+        support_credentials = optional(bool) # (Optional) Whether CORS requests with credentials are allowed. Defaults to `false`.
+      }))                                    # (Optional) A `cors` block as defined above.
+
       #     default_documents                 = optional(list(string)) # (Optional) Specifies a list of Default Documents for the Linux Web App.
       #     ftps_state                        = optional(string)       # (Optional) The State of FTP / FTPS service. Possible values include `AllAllowed`, `FtpsOnly`, and `Disabled`. Note: Azure defaults this value to `AllAllowed`, however, in the interests of security Terraform will default this to `Disabled` to ensure the user makes a conscious choice to enable it.
       #     health_check_path                 = optional(string)       # (Optional) The path to the Health Check.
@@ -153,10 +159,14 @@ variable "site_config" {
     application_stack = {
       docker_image_tag = "latest"
     }
-
-    auto_heal_enabled = false
-    auto_heal_setting = {}
-
+    auto_heal_enabled                             = false
+    auto_heal_setting                             = {}
+    container_registry_managed_identity_client_id = null
+    container_registry_use_managed_identity       = null
+    cors = {
+      allowed_origins     = []
+      support_credentials = false
+    }
   }
 }
 

@@ -84,6 +84,17 @@ resource "azurerm_linux_web_app" "linux_web_app" {
           }
         }
       }
+
+      container_registry_managed_identity_client_id = lookup(site_config.value, "container_registry_managed_identity_client_id", null)
+      container_registry_use_managed_identity       = lookup(site_config.value, "container_registry_use_managed_identity", null)
+
+      dynamic "cors" {
+        for_each = lookup(site_config.value, "cors", {})
+        content {
+          allowed_origins     = cors.value.allowed_origins
+          support_credentials = cors.value.support_credentials
+        }
+      }
     }
   }
 
