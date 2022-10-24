@@ -194,6 +194,53 @@ resource "azurerm_linux_web_app" "linux_web_app" {
           oauth_scopes            = facebook.value.oauth_scopes
         }
       }
+
+      dynamic "github" {
+        for_each = auth_settings.value.github
+        content {
+          client_id                  = github.value.client_id
+          client_secret              = github.value.client_secret
+          client_secret_setting_name = github.value.client_secret_setting_name
+          oauth_scopes               = github.value.oauth_scopes
+        }
+      }
+
+      dynamic "google" {
+        for_each = auth_settings.value.google
+        content {
+          client_id                  = google.value.client_id
+          client_secret              = google.value.client_secret
+          client_secret_setting_name = google.value.client_secret_setting_name
+          oauth_scopes               = google.value.oauth_scopes
+        }
+      }
+
+      issuer = auth_settings.value.issuer
+
+      dynamic "microsoft" {
+        for_each = auth_settings.value.microsoft
+        content {
+          client_id                  = microsoft.value.client_id
+          client_secret              = microsoft.value.client_secret
+          client_secret_setting_name = microsoft.value.client_secret_setting_name
+          oauth_scopes               = microsoft.value.oauth_scopes
+        }
+      }
+
+      runtime_version               = auth_settings.value.runtime_version
+      token_refresh_extension_hours = auth_settings.value.token_refresh_extension_hours
+      token_store_enabled           = auth_settings.value.token_store_enabled
+
+      dynamic "twitter" {
+        for_each = auth_settings.value.twitter
+        content {
+          consumer_key                 = twitter.value.consumer_key
+          consumer_secret              = twitter.value.consumer_secret
+          consumer_secret_setting_name = twitter.value.consumer_secret_setting_name
+        }
+      }
+
+      unauthenticated_client_action = auth_settings.value.unauthenticated_client_action
     }
   }
 

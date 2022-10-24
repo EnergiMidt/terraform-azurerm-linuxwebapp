@@ -237,6 +237,7 @@ variable "auth_settings" {
   type = object(
     {
       enabled = bool # (Required) Should the Authentication / Authorization feature be enabled for the Linux Web App?
+
       active_directory = optional(object(
         {
           client_id                  = string                 # (Required) The ID of the Client to use to authenticate with Azure Active Directory.
@@ -244,10 +245,12 @@ variable "auth_settings" {
           client_secret              = optional(string)       # (Optional) The Client Secret for the Client ID. Cannot be used with `client_secret_setting_name`.
           client_secret_setting_name = optional(string)       # (Optional) The App Setting name that contains the client secret of the Client. Cannot be used with `client_secret`.
         }
-      ))                                                      # (Optional) An `active_directory` block as defined above.
+      )) # (Optional) An `active_directory` block as defined above.
+
       additional_login_parameters    = optional(map(string))  # (Optional) Specifies a map of login Parameters to send to the OpenID Connect authorization endpoint when a user logs in.
       allowed_external_redirect_urls = optional(list(string)) # (Optional) Specifies a list of External URLs that can be redirected to as part of logging in or logging out of the Linux Web App.
       default_provider               = optional(string)       # (Optional) The default authentication provider to use when multiple providers are configured. Possible values include: `BuiltInAuthenticationProviderAzureActiveDirectory`, `BuiltInAuthenticationProviderFacebook`, `BuiltInAuthenticationProviderGoogle`, `BuiltInAuthenticationProviderMicrosoftAccount`, `BuiltInAuthenticationProviderTwitter`, `BuiltInAuthenticationProviderGithub`. Note: This setting is only needed if multiple providers are configured, and the `unauthenticated_client_action` is set to "RedirectToLoginPage".
+
       facebook = optional(object(
         {
           app_id                  = string           # (Required) The App ID of the Facebook app used for login.
@@ -256,60 +259,67 @@ variable "auth_settings" {
           oauth_scopes            = optional(string) # (Optional) Specifies a list of OAuth 2.0 scopes to be requested as part of Facebook login authentication.
         }
       )) # (Optional) A `facebook` block as defined above.
+
       github = optional(object(
         {
-
+          client_id                  = string           # (Required) The ID of the GitHub app used for login.
+          client_secret              = optional(string) # (Optional) The Client Secret of the GitHub app used for GitHub login. Cannot be specified with `client_secret_setting_name`.
+          client_secret_setting_name = optional(string) # (Optional) The app setting name that contains the `client_secret` value used for GitHub login. Cannot be specified with `client_secret`.
+          oauth_scopes               = optional(string) # (Optional) Specifies a list of OAuth 2.0 scopes that will be requested as part of GitHub login authentication.
         }
       )) # (Optional) A `github` block as defined above.
+
       google = optional(object(
         {
-
+          client_id                  = string           # (Required) The OpenID Connect Client ID for the Google web application.
+          client_secret              = optional(string) # (Optional) The client secret associated with the Google web application.  Cannot be specified with `client_secret_setting_name`.
+          client_secret_setting_name = optional(string) # (Optional) The app setting name that contains the `client_secret` value used for Google login. Cannot be specified with `client_secret`.
+          oauth_scopes               = optional(string) # (Optional) Specifies a list of OAuth 2.0 scopes that will be requested as part of Google Sign-In authentication. If not specified, `openid`, `profile`, and `email` are used as default scopes.
         }
       )) # (Optional) A `google` block as defined above.
-      issuer = optional(object(
-        {
 
-        }
-      )) # (Optional) The OpenID Connect Issuer URI that represents the entity that issues access tokens for this Linux Web App. Note: When using Azure Active Directory, this value is the URI of the directory tenant, e.g. https://sts.windows.net/{tenant-guid}/.
+      issuer = optional(string) # (Optional) The OpenID Connect Issuer URI that represents the entity that issues access tokens for this Linux Web App. Note: When using Azure Active Directory, this value is the URI of the directory tenant, e.g. https://sts.windows.net/{tenant-guid}/.
+
       microsoft = optional(object(
         {
-
+          client_id                  = string           # (Required) The OAuth 2.0 client ID that was created for the app used for authentication.
+          client_secret              = optional(string) # (Optional) The OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with `client_secret_setting_name`.
+          client_secret_setting_name = optional(string) # (Optional) The app setting name containing the OAuth 2.0 client secret that was created for the app used for authentication. Cannot be specified with `client_secret`.
+          oauth_scopes               = optional(string) # (Optional) Specifies a list of OAuth 2.0 scopes that will be requested as part of Microsoft Account authentication. If not specified, "wl.basic" is used as the default scope.
         }
       )) # (Optional) A `microsoft` block as defined above.
-      runtime_version = optional(object(
-        {
 
-        }
-      )) # (Optional) The RuntimeVersion of the Authentication / Authorization feature in use for the Linux Web App.
-      token_refresh_extension_hours = optional(object(
-        {
+      runtime_version               = optional(string) # (Optional) The RuntimeVersion of the Authentication / Authorization feature in use for the Linux Web App.
+      token_refresh_extension_hours = optional(number) # (Optional) The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to `72` hours.
+      token_store_enabled           = optional(bool)   # (Optional) Should the Linux Web App durably store platform-specific security tokens that are obtained during login flows? Defaults to `false`.
 
-        }
-      )) # (Optional) The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to `72` hours.
-      token_store_enabled = optional(object(
-        {
-
-        }
-      )) # (Optional) Should the Linux Web App durably store platform-specific security tokens that are obtained during login flows? Defaults to `false`.
       twitter = optional(object(
         {
-
+          consumer_key                 = string           # (Required) The OAuth 1.0a consumer key of the Twitter application used for sign-in.
+          consumer_secret              = optional(string) # (Optional) The OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with `consumer_secret_setting_name`.
+          consumer_secret_setting_name = optional(string) # (Optional) The app setting name that contains the OAuth 1.0a consumer secret of the Twitter application used for sign-in. Cannot be specified with `consumer_secret`.
         }
       )) # (Optional) A `twitter` block as defined above.
-      unauthenticated_client_action = optional(object(
-        {
 
-        }
-      )) # (Optional) The action to take when an unauthenticated client attempts to access the app. Possible values include: `RedirectToLoginPage`, `AllowAnonymous`.
+      unauthenticated_client_action = optional(string) # (Optional) The action to take when an unauthenticated client attempts to access the app. Possible values include: `RedirectToLoginPage`, `AllowAnonymous`.
     }
   )
   default = {
-    enabled                        = false
-    active_directory               = null
-    additional_login_parameters    = {}
-    allowed_external_redirect_urls = []
-    default_provider               = null
-    facebook                       = null
+    enabled = false
+    #   active_directory               = null
+    #   additional_login_parameters    = {}
+    #   allowed_external_redirect_urls = []
+    #   default_provider               = null
+    #   facebook                       = null
+    #   github                         = null
+    #   google                         = null
+    #   issuer                         = null
+    #   microsoft                      = null
+    #   runtime_version                = null
+    #   token_refresh_extension_hours  = null
+    #   token_store_enabled            = null
+    #   twitter                        = null
+    #   unauthenticated_client_action  = null
   }
 }
 
