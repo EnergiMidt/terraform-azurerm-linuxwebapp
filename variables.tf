@@ -244,25 +244,16 @@ variable "auth_settings" {
           client_secret              = optional(string)       # (Optional) The Client Secret for the Client ID. Cannot be used with `client_secret_setting_name`.
           client_secret_setting_name = optional(string)       # (Optional) The App Setting name that contains the client secret of the Client. Cannot be used with `client_secret`.
         }
-      )) # (Optional) An `active_directory` block as defined above.
-      additional_login_parameters = optional(object(
-        {
-
-        }
-      )) # (Optional) Specifies a map of login Parameters to send to the OpenID Connect authorization endpoint when a user logs in.
-      allowed_external_redirect_urls = optional(object(
-        {
-
-        }
-      )) # (Optional) Specifies a list of External URLs that can be redirected to as part of logging in or logging out of the Linux Web App.
-      default_provider = optional(object(
-        {
-
-        }
-      )) # (Optional) The default authentication provider to use when multiple providers are configured. Possible values include: `BuiltInAuthenticationProviderAzureActiveDirectory`, `BuiltInAuthenticationProviderFacebook`, `BuiltInAuthenticationProviderGoogle`, `BuiltInAuthenticationProviderMicrosoftAccount`, `BuiltInAuthenticationProviderTwitter`, `BuiltInAuthenticationProviderGithub`. Note: This setting is only needed if multiple providers are configured, and the `unauthenticated_client_action` is set to "RedirectToLoginPage".
+      ))                                                      # (Optional) An `active_directory` block as defined above.
+      additional_login_parameters    = optional(map(string))  # (Optional) Specifies a map of login Parameters to send to the OpenID Connect authorization endpoint when a user logs in.
+      allowed_external_redirect_urls = optional(list(string)) # (Optional) Specifies a list of External URLs that can be redirected to as part of logging in or logging out of the Linux Web App.
+      default_provider               = optional(string)       # (Optional) The default authentication provider to use when multiple providers are configured. Possible values include: `BuiltInAuthenticationProviderAzureActiveDirectory`, `BuiltInAuthenticationProviderFacebook`, `BuiltInAuthenticationProviderGoogle`, `BuiltInAuthenticationProviderMicrosoftAccount`, `BuiltInAuthenticationProviderTwitter`, `BuiltInAuthenticationProviderGithub`. Note: This setting is only needed if multiple providers are configured, and the `unauthenticated_client_action` is set to "RedirectToLoginPage".
       facebook = optional(object(
         {
-
+          app_id                  = string           # (Required) The App ID of the Facebook app used for login.
+          app_secret              = optional(string) # (Optional) The App Secret of the Facebook app used for Facebook login. Cannot be specified with `app_secret_setting_name`.
+          app_secret_setting_name = optional(string) # (Optional) The app setting name that contains the `app_secret` value used for Facebook login. Cannot be specified with `app_secret`.
+          oauth_scopes            = optional(string) # (Optional) Specifies a list of OAuth 2.0 scopes to be requested as part of Facebook login authentication.
         }
       )) # (Optional) A `facebook` block as defined above.
       github = optional(object(
@@ -313,8 +304,12 @@ variable "auth_settings" {
     }
   )
   default = {
-    enabled          = false
-    active_directory = null
+    enabled                        = false
+    active_directory               = null
+    additional_login_parameters    = {}
+    allowed_external_redirect_urls = []
+    default_provider               = null
+    facebook                       = null
   }
 }
 

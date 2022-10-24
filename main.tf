@@ -180,6 +180,20 @@ resource "azurerm_linux_web_app" "linux_web_app" {
           client_secret_setting_name = active_directory.value.client_secret_setting_name
         }
       }
+
+      additional_login_parameters    = auth_settings.value.additional_login_parameters
+      allowed_external_redirect_urls = auth_settings.value.allowed_external_redirect_urls
+      default_provider               = auth_settings.value.default_provider
+
+      dynamic "facebook" {
+        for_each = auth_settings.value.facebook
+        content {
+          app_id                  = facebook.value.app_id
+          app_secret              = facebook.value.app_secret
+          app_secret_setting_name = facebook.value.app_secret_setting_name
+          oauth_scopes            = facebook.value.oauth_scopes
+        }
+      }
     }
   }
 
