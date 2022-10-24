@@ -398,11 +398,7 @@ variable "https_only" {
   default     = false
 }
 
-# TODO: Implement below dynamic block in main.tf file.
 variable "identity" {
-  default = {
-    type = "SystemAssigned"
-  }
   description = "(Optional) An identity block as defined below which contains the Managed Service Identity information for this resource."
   type = object(
     {
@@ -410,6 +406,9 @@ variable "identity" {
       identity_ids = optional(list(string)) # (Optional) A list of User Assigned Managed Identity IDs to be assigned to this resource.
     }
   )
+  default = {
+    type = "SystemAssigned"
+  }
 }
 
 variable "key_vault_reference_identity_id" {
@@ -418,11 +417,52 @@ variable "key_vault_reference_identity_id" {
   default     = null
 }
 
-# TODO: Implement below dynamic block in main.tf file.
 variable "logs" {
   description = "(Optional) A `logs` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
-  type        = map(any)
-  default     = {}
+  type = object(
+    {
+      application_logs = optional(object(
+        {
+          azure_blob_storage = optional(object(
+            {
+              level             = string # (Required) The level at which to log. Possible values include `Error`, `Warning`, `Information`, `Verbose` and `Off`. **NOTE:** this field is not available for `http_logs`
+              retention_in_days = string # (Required) The time in days after which to remove blobs. A value of `0` means no retention.
+              sas_url           = string # (Required) SAS url to an Azure blob container with read/write/list/delete permissions.
+            }
+          )) # (Optional) An `azure_blob_storage` block as defined above.
+
+          file_system_level = string # (Required) Log level. Possible values include: `Verbose`, `Information`, `Warning`, and `Error`.
+        }
+      )) # (Optional) A `application_logs` block as defined above.
+
+      detailed_error_messages = optional(bool) # (Optional) Should detailed error messages be enabled?
+      failed_request_tracing  = optional(bool) # (Optional) Should the failed request tracing be enabled?
+
+      http_logs = optional(object(
+        {
+          azure_blob_storage = optional(object(
+            {
+              # level             = string # (Required) The level at which to log. Possible values include `Error`, `Warning`, `Information`, `Verbose` and `Off`. **NOTE:** this field is not available for `http_logs`
+              retention_in_days = string # (Required) The time in days after which to remove blobs. A value of `0` means no retention.
+              sas_url           = string # (Required) SAS url to an Azure blob container with read/write/list/delete permissions.
+            }
+          )) # (Optional) An `azure_blob_storage` block as defined above.
+          file_system = optional(object(
+            {
+              retention_in_days = number # (Required) The retention period in days. A value of `0` means no retention.
+              retention_in_mb   = number # (Required) The maximum size in megabytes that log files can use.
+            }
+          )) # (Optional) A `file_system` block as defined above.
+        }
+      )) # (Optional) An `http_logs` block as defined above.
+    }
+  )
+  default = {
+    application_logs        = null
+    detailed_error_messages = false
+    failed_request_tracing  = false
+    http_logs               = null
+  }
 }
 
 # TODO: Implement below dynamic block in main.tf file.

@@ -292,7 +292,50 @@ resource "azurerm_linux_web_app" "linux_web_app" {
 
   key_vault_reference_identity_id = var.key_vault_reference_identity_id
 
-  # logs {}
+  dynamic "logs" {
+    for_each = var.logs
+    content {
+      dynamic "application_logs" {
+        for_each = logs.value.application_logs
+        content {
+          dynamic "azure_blob_storage" {
+            for_each = application_logs.value.azure_blob_storage
+            content {
+              level             = azure_blob_storage.value.level
+              retention_in_days = azure_blob_storage.value.retention_in_days
+              sas_url           = azure_blob_storage.value.sas_url
+            }
+          }
+          file_system_level = azure_blob_storage.value.file_system_level
+        }
+      }
+
+      detailed_error_messages = logs.value.detailed_error_messages
+      failed_request_tracing  = logs.value.failed_request_tracing
+
+      dynamic "http_logs" {
+        for_each = logs.value.http_logs
+        content {
+          dynamic "azure_blob_storage" {
+            for_each = http_logs.value.azure_blob_storage
+            content {
+              # level             = azure_blob_storage.value.level # Note: this field is not available for `http_logs` block.
+              retention_in_days = azure_blob_storage.value.retention_in_days
+              sas_url           = azure_blob_storage.value.sas_url
+            }
+          }
+
+          dynamic "file_system" {
+            for_each = http_logs.value.file_system
+            content {
+              retention_in_days = file_system.value.retention_in_days
+              retention_in_mb   = file_system.value.retention_in_mb
+            }
+          }
+        }
+      }
+    }
+  }
 
   # storage_account {}
 
