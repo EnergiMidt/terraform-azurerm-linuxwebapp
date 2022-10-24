@@ -270,7 +270,14 @@ resource "azurerm_linux_web_app" "linux_web_app" {
   client_certificate_mode    = var.client_certificate_mode
   # client_certificate_exclusion_paths = var.client_certificate_exclusion_paths # https://github.com/hashicorp/terraform-provider-azurerm/blob/main/CHANGELOG.md#3280-october-20-2022
 
-  # connection_string {}
+  dynamic "connection_string" {
+    for_each = var.connection_string
+    content {
+      name  = connection_string.value.name
+      type  = connection_string.value.type
+      value = connection_string.value.value
+    }
+  }
 
   enabled    = var.enabled
   https_only = var.https_only

@@ -374,11 +374,16 @@ variable "client_certificate_exclusion_paths" {
   default     = null
 }
 
-# TODO: Implement below dynamic block in main.tf file.
 variable "connection_string" {
   description = "(Optional) A `connection_string` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
-  type        = map(any)
-  default     = {}
+  type = object(
+    {
+      name  = string # (Required) The name of the Connection String.
+      type  = string # (Required) Type of database. Possible values include: `MySQL`, `SQLServer`, `SQLAzure`, `Custom`, `NotificationHub`, `ServiceBus`, `EventHub`, `APIHub`, `DocDb`, `RedisCache`, and `PostgreSQL`.
+      value = string # (Required) The connection string value.
+    }
+  )
+  default = null
 }
 
 variable "enabled" {
