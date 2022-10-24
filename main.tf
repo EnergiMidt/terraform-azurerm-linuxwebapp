@@ -244,7 +244,26 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     }
   }
 
-  # backup {}
+  dynamic "backup" {
+    for_each = var.backup
+    content {
+      name = backup.value.name
+
+      dynamic "schedule" {
+        for_each = backup.value.schedule
+        content {
+          frequency_interval       = schedule.value.frequency_interval
+          frequency_unit           = schedule.value.frequency_unit
+          keep_at_least_one_backup = schedule.value.keep_at_least_one_backup
+          retention_period_days    = schedule.value.retention_period_days
+          start_time               = schedule.value.start_time
+        }
+      }
+
+      storage_account_url = backup.value.storage_account_url
+      enabled             = backup.value.enabled
+    }
+  }
 
   client_affinity_enabled    = var.client_affinity_enabled
   client_certificate_enabled = var.client_certificate_enabled

@@ -323,11 +323,27 @@ variable "auth_settings" {
   }
 }
 
-# TODO: Implement below dynamic block in main.tf file.
 variable "backup" {
   description = "(Optional) A `backup` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
-  type        = map(any)
-  default     = {}
+  type = object(
+    {
+      name = string # (Required) The name which should be used for this Backup.
+
+      schedule = optional(object(
+        {
+          frequency_interval       = string           # (Required) How often the backup should be executed (e.g. for weekly backup, this should be set to `7` and `frequency_unit` should be set to `Day`). Note: Not all intervals are supported on all Linux Web App SKUs. Please refer to the official documentation for appropriate values.
+          frequency_unit           = optional(string) # (Required) The unit of time for how often the backup should take place. Possible values include: `Day`, `Hour`
+          keep_at_least_one_backup = optional(bool)   # (Optional) Should the service keep at least one backup, regardless of the age of backup? Defaults to `false`.
+          retention_period_days    = optional(number) # (Optional) After how many days backups should be deleted.
+          start_time               = optional(string) # (Optional) When the schedule should start working in RFC-3339 format.
+        }
+      )) # (Required) A `schedule` block as defined above.
+
+      storage_account_url = optional(string) # (Required) The SAS URL to the container.
+      enabled             = optional(bool)   # (Optional) Should this backup job be enabled?
+    }
+  )
+  default = null
 }
 
 variable "client_affinity_enabled" {
