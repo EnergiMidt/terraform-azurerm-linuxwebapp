@@ -166,7 +166,23 @@ resource "azurerm_linux_web_app" "linux_web_app" {
 
   app_settings = var.app_settings
 
-  # auth_settings {}
+  dynamic "auth_settings" {
+    for_each = var.auth_settings
+    content {
+      enabled = auth_settings.value.enabled
+
+      dynamic "active_directory" {
+        for_each = auth_settings.value.active_directory
+        content {
+          client_id                  = active_directory.value.client_id
+          allowed_audiences          = active_directory.value.allowed_audiences
+          client_secret              = active_directory.value.client_secret
+          client_secret_setting_name = active_directory.value.client_secret_setting_name
+        }
+      }
+    }
+  }
+
   # backup {}
 
   client_affinity_enabled    = var.client_affinity_enabled

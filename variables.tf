@@ -234,8 +234,88 @@ variable "app_settings" {
 # TODO: Implement below dynamic block in main.tf file.
 variable "auth_settings" {
   description = "(Optional) A `auth_settings` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
-  type        = map(any)
-  default     = {}
+  type = object(
+    {
+      enabled = bool # (Required) Should the Authentication / Authorization feature be enabled for the Linux Web App?
+      active_directory = optional(object(
+        {
+          client_id                  = string                 # (Required) The ID of the Client to use to authenticate with Azure Active Directory.
+          allowed_audiences          = optional(list(string)) # (Optional) Specifies a list of Allowed audience values to consider when validating JWTs issued by Azure Active Directory. Note: The `client_id` value is always considered an allowed audience.
+          client_secret              = optional(string)       # (Optional) The Client Secret for the Client ID. Cannot be used with `client_secret_setting_name`.
+          client_secret_setting_name = optional(string)       # (Optional) The App Setting name that contains the client secret of the Client. Cannot be used with `client_secret`.
+        }
+      )) # (Optional) An `active_directory` block as defined above.
+      additional_login_parameters = optional(object(
+        {
+
+        }
+      )) # (Optional) Specifies a map of login Parameters to send to the OpenID Connect authorization endpoint when a user logs in.
+      allowed_external_redirect_urls = optional(object(
+        {
+
+        }
+      )) # (Optional) Specifies a list of External URLs that can be redirected to as part of logging in or logging out of the Linux Web App.
+      default_provider = optional(object(
+        {
+
+        }
+      )) # (Optional) The default authentication provider to use when multiple providers are configured. Possible values include: `BuiltInAuthenticationProviderAzureActiveDirectory`, `BuiltInAuthenticationProviderFacebook`, `BuiltInAuthenticationProviderGoogle`, `BuiltInAuthenticationProviderMicrosoftAccount`, `BuiltInAuthenticationProviderTwitter`, `BuiltInAuthenticationProviderGithub`. Note: This setting is only needed if multiple providers are configured, and the `unauthenticated_client_action` is set to "RedirectToLoginPage".
+      facebook = optional(object(
+        {
+
+        }
+      )) # (Optional) A `facebook` block as defined above.
+      github = optional(object(
+        {
+
+        }
+      )) # (Optional) A `github` block as defined above.
+      google = optional(object(
+        {
+
+        }
+      )) # (Optional) A `google` block as defined above.
+      issuer = optional(object(
+        {
+
+        }
+      )) # (Optional) The OpenID Connect Issuer URI that represents the entity that issues access tokens for this Linux Web App. Note: When using Azure Active Directory, this value is the URI of the directory tenant, e.g. https://sts.windows.net/{tenant-guid}/.
+      microsoft = optional(object(
+        {
+
+        }
+      )) # (Optional) A `microsoft` block as defined above.
+      runtime_version = optional(object(
+        {
+
+        }
+      )) # (Optional) The RuntimeVersion of the Authentication / Authorization feature in use for the Linux Web App.
+      token_refresh_extension_hours = optional(object(
+        {
+
+        }
+      )) # (Optional) The number of hours after session token expiration that a session token can be used to call the token refresh API. Defaults to `72` hours.
+      token_store_enabled = optional(object(
+        {
+
+        }
+      )) # (Optional) Should the Linux Web App durably store platform-specific security tokens that are obtained during login flows? Defaults to `false`.
+      twitter = optional(object(
+        {
+
+        }
+      )) # (Optional) A `twitter` block as defined above.
+      unauthenticated_client_action = optional(object(
+        {
+
+        }
+      )) # (Optional) The action to take when an unauthenticated client attempts to access the app. Possible values include: `RedirectToLoginPage`, `AllowAnonymous`.
+    }
+  )
+  default = {
+    enabled          = false
+    active_directory = null
+  }
 }
 
 # TODO: Implement below dynamic block in main.tf file.
