@@ -342,7 +342,7 @@ variable "backup" {
       storage_account_url = optional(string) # (Required) The SAS URL to the container.
       enabled             = optional(bool)   # (Optional) Should this backup job be enabled?
     }
-  )
+  ) # (Optional) A `backup` block as defined above.
   default = null
 }
 
@@ -384,7 +384,7 @@ variable "connection_string" {
     }
   )
   default = null
-}
+} # (Optional) One or more `connection_string` blocks as defined above.
 
 variable "enabled" {
   description = "(Optional) Should the Linux Web App be enabled? Defaults to `true`."
@@ -405,7 +405,7 @@ variable "identity" {
       type         = string                 # (Required) Specifies the type of Managed Service Identity that should be configured on this resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned` (to enable both).
       identity_ids = optional(list(string)) # (Optional) A list of User Assigned Managed Identity IDs to be assigned to this resource.
     }
-  )
+  ) # (Optional) An `identity` block as defined above.
   default = {
     type = "SystemAssigned"
   }
@@ -456,7 +456,7 @@ variable "logs" {
         }
       )) # (Optional) An `http_logs` block as defined above.
     }
-  )
+  ) # (Optional) A `logs` block as defined above.
   default = {
     application_logs        = null
     detailed_error_messages = false
@@ -465,7 +465,6 @@ variable "logs" {
   }
 }
 
-# TODO: Implement below dynamic block in main.tf file.
 variable "storage_account" {
   description = "(Optional) A `storage_account` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
   type = object(
@@ -477,11 +476,10 @@ variable "storage_account" {
       type         = string # (Required) The Azure Storage Type. Possible values include `AzureFiles` and `AzureBlob`.
       mount_path   = string # (Optional) The path at which to mount the storage share.
     }
-  )
+  ) # (Optional) One or more `storage_account` blocks as defined above.
   default = null
 }
 
-# TODO: Implement below dynamic block in main.tf file.
 variable "sticky_settings" {
   description = "(Optional) A `sticky_settings` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
   type        = map(any)
