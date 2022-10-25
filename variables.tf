@@ -474,7 +474,7 @@ variable "storage_account" {
       account_name = string # (Required) The Name of the Storage Account.
       name         = string # (Required) The name which should be used for this Storage Account.
       share_name   = string # (Required) The Name of the File Share or Container Name for Blob storage.
-      type         = string # (Required) The Azure Storage Type. Possible values include `AzureFiles` and `AzureBlob`
+      type         = string # (Required) The Azure Storage Type. Possible values include `AzureFiles` and `AzureBlob`.
       mount_path   = string # (Optional) The path at which to mount the storage share.
     }
   )

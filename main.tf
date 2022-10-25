@@ -344,7 +344,7 @@ resource "azurerm_linux_web_app" "linux_web_app" {
       account_name = storage_account.value.account_name # (Required) The Name of the Storage Account.
       name         = storage_account.value.name         # (Required) The name which should be used for this Storage Account.
       share_name   = storage_account.value.share_name   # (Required) The Name of the File Share or Container Name for Blob storage.
-      type         = storage_account.value.type         # (Required) The Azure Storage Type. Possible values include `AzureFiles` and `AzureBlob`
+      type         = storage_account.value.type         # (Required) The Azure Storage Type. Possible values include `AzureFiles` and `AzureBlob`.
       mount_path   = storage_account.value.mount_path   # (Optional) The path at which to mount the storage share.
     }
   }
