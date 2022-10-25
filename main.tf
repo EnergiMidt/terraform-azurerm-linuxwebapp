@@ -349,7 +349,13 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     }
   }
 
-  # sticky_settings {}
+  dynamic "sticky_settings" {
+    for_each = var.sticky_settings
+    content {
+      app_setting_names       = sticky_settings.value.app_setting_names
+      connection_string_names = sticky_settings.value.connection_string_names
+    }
+  }
 
   virtual_network_subnet_id = var.virtual_network_subnet_id
   zip_deploy_file           = var.zip_deploy_file

@@ -482,8 +482,13 @@ variable "storage_account" {
 
 variable "sticky_settings" {
   description = "(Optional) A `sticky_settings` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
-  type        = map(any)
-  default     = {}
+  type = object(
+    {
+      app_setting_names       = optional(list(string)) # (Optional) A list of `app_setting` names that the Linux Web App will not swap between Slots when a swap operation is triggered.
+      connection_string_names = optional(list(string)) # (Optional) A list of `connection_string` names that the Linux Web App will not swap between Slots when a swap operation is triggered.
+    }
+  ) # (Optional) A `sticky_settings` block as defined above.
+  default = {}
 }
 
 variable "virtual_network_subnet_id" {
