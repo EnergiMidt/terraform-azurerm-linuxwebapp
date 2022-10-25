@@ -468,8 +468,17 @@ variable "logs" {
 # TODO: Implement below dynamic block in main.tf file.
 variable "storage_account" {
   description = "(Optional) A `storage_account` block as documented [here](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
-  type        = map(any)
-  default     = {}
+  type = object(
+    {
+      access_key   = string # (Required) The Access key for the storage account.
+      account_name = string # (Required) The Name of the Storage Account.
+      name         = string # (Required) The name which should be used for this Storage Account.
+      share_name   = string # (Required) The Name of the File Share or Container Name for Blob storage.
+      type         = string # (Required) The Azure Storage Type. Possible values include `AzureFiles` and `AzureBlob`
+      mount_path   = string # (Optional) The path at which to mount the storage share.
+    }
+  )
+  default = null
 }
 
 # TODO: Implement below dynamic block in main.tf file.
