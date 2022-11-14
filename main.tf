@@ -11,7 +11,7 @@ resource "azurerm_linux_web_app" "linux_web_app" {
   app_settings        = var.app_settings
 
   dynamic "identity" {
-    for_each = lookup(var.configuration.value, "identity", {})
+    for_each = try(var.configuration.identity, null) != null ? [var.configuration.identity] : []
 
     content {
       type         = identity.value.type
