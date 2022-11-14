@@ -14,8 +14,8 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     for_each = try(var.identity, null) == null ? [] : [1]
 
     content {
-      type         = identity.value.type
-      identity_ids = try(identity.value.managed_identities, null)
+      type         = var.identity.value.type
+      identity_ids = try(var.identity.value.managed_identities, null)
     }
   }
 
