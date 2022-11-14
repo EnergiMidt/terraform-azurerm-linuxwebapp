@@ -11,6 +11,12 @@ variable "environment" {
   }
 }
 
+variable "configuration" {
+  description = "(Optional) The configuration for block type arguments."
+  type        = any
+  default     = null
+}
+
 # This `name` variable is replaced by the use of `system_name` and `environment` variables.
 # variable "name" {
 #   description = "(Required) The name which should be used for this resource. Changing this forces a new resource to be created."
@@ -68,18 +74,18 @@ variable "app_settings" {
   default     = {}
 }
 
-variable "identity" {
-  default = {
-    type = "SystemAssigned"
-  }
-  description = "(Optional) An identity block as defined below which contains the Managed Service Identity information for this resource."
-  type = object(
-    {
-      type         = string                 # (Required) Specifies the type of Managed Service Identity that should be configured on this resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned` (to enable both).
-      identity_ids = optional(list(string)) # (Optional) A list of User Assigned Managed Identity IDs to be assigned to this resource.
-    }
-  )
-}
+# variable "identity" {
+#   default = {
+#     type = "SystemAssigned"
+#   }
+#   description = "(Optional) An identity block as defined below which contains the Managed Service Identity information for this resource."
+#   type = object(
+#     {
+#       type         = string                 # (Required) Specifies the type of Managed Service Identity that should be configured on this resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned` (to enable both).
+#       identity_ids = optional(list(string)) # (Optional) A list of User Assigned Managed Identity IDs to be assigned to this resource.
+#     }
+#   )
+# }
 
 variable "tags" {
   description = "(Optional) A mapping of tags to assign to the resource."

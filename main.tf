@@ -7,10 +7,19 @@ resource "azurerm_linux_web_app" "linux_web_app" {
   name                = local.name
   location            = local.location
   resource_group_name = var.resource_group.name
+  service_plan_id     = var.service_plan_id
+  app_settings        = var.app_settings
 
-  service_plan_id = var.service_plan_id
+  dynamic "identity" {
+    for_each = lookup(var.configuration.value, "identity", {})
+
+    content {
+      type         = identity.value.type
+      identity_ids = try(identity.value.managed_identities, null)
+    }
+  }
+
   site_config {}
-  app_settings = var.app_settings
 
   tags = var.tags
 }
