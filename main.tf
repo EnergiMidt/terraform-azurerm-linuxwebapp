@@ -11,11 +11,10 @@ resource "azurerm_linux_web_app" "linux_web_app" {
   app_settings        = var.app_settings
 
   dynamic "identity" {
-    for_each = try(var.identity, null) == null ? [] : [1]
-
+    for_each = try(var.configuration.identity, null) != null ? [var.configuration.identity] : []
     content {
-      type         = var.identity.type
-      identity_ids = try(var.identity.identity_ids, null)
+      type         = var.configuration.identity.type
+      identity_ids = try(var.configuration.identity.identity_ids, null)
     }
   }
 
