@@ -18,7 +18,10 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     }
   }
 
-  site_config {}
+  site_config {
+    container_registry_managed_identity_client_id = lookup(var.configuration.site_config.value, "container_registry_managed_identity_client_id", null)
+    container_registry_use_managed_identity       = lookup(var.configuration.site_config.value, "container_registry_use_managed_identity", null)
+  }
 
   tags = var.tags
 }
