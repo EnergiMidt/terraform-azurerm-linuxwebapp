@@ -25,3 +25,11 @@ resource "azurerm_linux_web_app" "linux_web_app" {
 
   tags = var.tags
 }
+
+# Custom domain
+resource "azurerm_app_service_custom_hostname_binding" "custom_hostname" {
+  count               = var.custom_domain == null ? 0 : 1
+  hostname            = var.custom_domain
+  app_service_name    = azurerm_linux_web_app.linux_web_app.name
+  resource_group_name = var.resource_group.name
+}
