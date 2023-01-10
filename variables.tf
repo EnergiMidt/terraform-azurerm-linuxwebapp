@@ -98,6 +98,15 @@ variable "app_settings" {
 #   )
 # }
 
+
+variable "custom_domain" {
+  description = <<EOT
+  (Optional) A custom domain name / hostname. Example: "api.test.no"
+  EOT
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "(Optional) A mapping of tags to assign to the resource."
   default     = {}
