@@ -19,9 +19,9 @@ resource "azurerm_linux_web_app" "linux_web_app" {
   }
 
   site_config {
-    always_on                                     = lookup(try(var.configuration.site_config, null), "always_on", true)
-    container_registry_managed_identity_client_id = lookup(try(var.configuration.site_config, null), "container_registry_managed_identity_client_id", null)
-    container_registry_use_managed_identity       = lookup(try(var.configuration.site_config, null), "container_registry_use_managed_identity", false)
+    always_on                                     = try(var.configuration.site_config.always_on, true)
+    container_registry_managed_identity_client_id = try(var.configuration.site_config.container_registry_managed_identity_client_id, null)
+    container_registry_use_managed_identity       = try(var.configuration.site_config.container_registry_use_managed_identity, false)
   }
 
   tags = var.tags
