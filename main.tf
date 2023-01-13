@@ -36,11 +36,13 @@ resource "azurerm_app_service_custom_hostname_binding" "custom_hostname" {
 }
 
 resource "azurerm_app_service_managed_certificate" "cert" {
-  custom_hostname_binding_id = azurerm_app_service_custom_hostname_binding.custom_hostname.id
+  count                      = var.custom_domain == null ? 0 : 1
+  custom_hostname_binding_id = azurerm_app_service_custom_hostname_binding.custom_hostname[0].id
 }
 
 resource "azurerm_app_service_certificate_binding" "cert_binding" {
-  hostname_binding_id = azurerm_app_service_custom_hostname_binding.custom_hostname.id
-  certificate_id      = azurerm_app_service_managed_certificate.cert.id
+  count               = var.custom_domain == null ? 0 : 1
+  hostname_binding_id = azurerm_app_service_custom_hostname_binding.custom_hostname[0].id
+  certificate_id      = azurerm_app_service_managed_certificate.cert[0].id
   ssl_state           = "SniEnabled"
 }
