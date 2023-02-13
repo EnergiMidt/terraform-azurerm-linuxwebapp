@@ -112,3 +112,9 @@ variable "tags" {
   default     = {}
   type        = map(string)
 }
+
+variable "https_only" {
+  description = "(Optional) Should the Linux Web App require HTTPS connections. Defaults to `true`."
+  default     = true
+  type        = bool
+}
