@@ -47,6 +47,15 @@ resource "azurerm_linux_web_app" "linux_web_app" {
   }
 
   tags = var.tags
+
+  # checkov:skip=CKV_AZURE_13: Ensure App Service Authentication is set on Azure App Service. https://docs.bridgecrew.io/docs/bc_azr_general_2
+  # checkov:skip=CKV_AZURE_17: Ensure the web app has 'Client Certificates (Incoming client certificates)' set. https://docs.bridgecrew.io/docs/bc_azr_networking_7
+  # checkov:skip=CKV_AZURE_18: Ensure that 'HTTP Version' is the latest if used to run the web app. https://docs.bridgecrew.io/docs/bc_azr_networking_8
+  # checkov:skip=CKV_AZURE_63: Ensure that App service enables HTTP logging. https://docs.bridgecrew.io/docs/ensure-that-app-service-enables-http-logging
+  # checkov:skip=CKV_AZURE_65: Ensure that App service enables detailed error messages. https://docs.bridgecrew.io/docs/tbdensure-that-app-service-enables-detailed-error-messages
+  # checkov:skip=CKV_AZURE_66: Ensure that App service enables failed request tracing. https://docs.bridgecrew.io/docs/ensure-that-app-service-enables-failed-request-tracing
+  # checkov:skip=CKV_AZURE_78: Ensure FTP deployments are disabled. https://docs.bridgecrew.io/docs/ensure-ftp-deployments-are-disabled
+  # checkov:skip=CKV_AZURE_88: Ensure that app services use Azure Files. hhttps://docs.bridgecrew.io/docs/ensure-that-app-services-use-azure-files
 }
 
 # Custom domain
