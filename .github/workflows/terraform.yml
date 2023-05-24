@@ -1,7 +1,7 @@
 ---
 name: Terraform
 
-permissions: read-all
+permissions: {} # Disable permissions for all of the available scopes. https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
 
 on:
   push:
