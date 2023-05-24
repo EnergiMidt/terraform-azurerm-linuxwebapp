@@ -37,8 +37,6 @@ jobs:
       TF_IN_AUTOMATION: "NON_EMPTY_VALUE" # https://developer.hashicorp.com/terraform/tutorials/automation/automate-terraform#controlling-terraform-output-in-automation
       ACTIONS_ALLOW_UNSECURE_COMMANDS: false
     permissions:
-      actions: write
-      checks: write
       contents: write
     steps:
       - uses: actions/checkout@v3
