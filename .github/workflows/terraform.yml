@@ -41,7 +41,9 @@ jobs:
       - uses: actions/checkout@v3
         continue-on-error: false
       - name: "Inject Terraform Documentation"
-        uses: terraform-docs/gh-actions@cfde42f79b15256c71f4b79ae1d6acea0f689952 # https://github.com/terraform-docs/gh-actions/issues/97#issuecomment-1335108516
+        uses: terraform-docs/gh-actions@v1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true # https://github.com/terraform-docs/gh-actions/issues/97#issuecomment-1335108516
         with:
           working-dir: .
           output-file: README.md
