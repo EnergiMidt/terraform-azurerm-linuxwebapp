@@ -73,31 +73,11 @@ variable "service_plan_id" {
   type        = string
 }
 
-variable "site_config" {
-  description = "(Required) A site_config block as defined at [azurerm_linux_web_app](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
-  type        = any
-  default     = {}
-}
-
 variable "app_settings" {
   description = "(Optional) A map of key-value pairs of App Settings as defined at [azurerm_linux_web_app](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app)."
   type        = map(any)
   default     = {}
 }
-
-# variable "identity" {
-#   default = {
-#     type = "SystemAssigned"
-#   }
-#   description = "(Optional) An identity block as defined below which contains the Managed Service Identity information for this resource."
-#   type = object(
-#     {
-#       type         = string                 # (Required) Specifies the type of Managed Service Identity that should be configured on this resource. Possible values are `SystemAssigned`, `UserAssigned` and `SystemAssigned, UserAssigned` (to enable both).
-#       identity_ids = optional(list(string)) # (Optional) A list of User Assigned Managed Identity IDs to be assigned to this resource.
-#     }
-#   )
-# }
-
 
 variable "custom_domain" {
   description = <<EOT
