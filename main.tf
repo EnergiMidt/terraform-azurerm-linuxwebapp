@@ -24,7 +24,9 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     container_registry_managed_identity_client_id = try(var.configuration.site_config.container_registry_managed_identity_client_id, null)
     container_registry_use_managed_identity       = try(var.configuration.site_config.container_registry_use_managed_identity, false)
 
-    # Brukes i Brille for å rute all trafikk fra App Service gjennom et NAT
+    health_check_path                 = try(var.configuration.site_config.value.health_check_path, null)
+    health_check_eviction_time_in_min = try(var.configuration.site_config.value.health_check_eviction_time_in_min, null)
+
     vnet_route_all_enabled = try(var.configuration.site_config.vnet_route_all_enabled, false)
   }
 
