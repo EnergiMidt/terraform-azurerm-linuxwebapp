@@ -1,7 +1,8 @@
 ---
 name: Terraform
 
-permissions: read-all
+permissions:
+  actions: write
 
 on:
   push:
