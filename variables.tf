@@ -98,9 +98,3 @@ variable "https_only" {
   default     = true
   type        = bool
 }
-
-# variable "https_only2" {
-#   description = "(Optional) Should the Linux Web App require HTTPS connections. Defaults to `true`."
-#   default     = true
-#   type        = bool
-# }
