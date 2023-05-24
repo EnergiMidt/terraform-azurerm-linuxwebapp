@@ -58,6 +58,7 @@ No modules.
 | <a name="input_custom_domain"></a> [custom\_domain](#input\_custom\_domain) | (Optional) A custom domain name / hostname. Example: "api.test.no" | `string` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | (Required) The name of the environment. | `string` | n/a | yes |
 | <a name="input_https_only"></a> [https\_only](#input\_https\_only) | (Optional) Should the Linux Web App require HTTPS connections. Defaults to `true`. | `bool` | `true` | no |
+| <a name="input_https_only2"></a> [https\_only2](#input\_https\_only2) | (Optional) Should the Linux Web App require HTTPS connections. Defaults to `true`. | `bool` | `true` | no |
 | <a name="input_override_location"></a> [override\_location](#input\_override\_location) | (Optional) Override the location of the resource. Under normal circumstances, it should not be used. | `string` | `null` | no |
 | <a name="input_override_name"></a> [override\_name](#input\_override\_name) | (Optional) Override the name of the resource. Under normal circumstances, it should not be used. | `string` | `null` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | (Required) The resource group in which to create the resource. | `any` | n/a | yes |
