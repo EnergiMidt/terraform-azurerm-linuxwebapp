@@ -19,6 +19,73 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     }
   }
 
+  dynamic "auth_settings_v2" {
+    for_each = try(var.configuration.auth_settings_v2, null) != null ? [var.configuration.auth_settings_v2] : []
+    iterator = fisk
+    content {
+      auth_enabled = true
+      #      excluded_paths           = []
+      #      forward_proxy_convention = "NoProxy"
+      #      http_route_api_prefix    = null # "/.auth"
+      require_authentication = true
+      require_https = true
+      runtime_version = "~1"
+      unauthenticated_action = "Return401" # "RedirectToLoginPage"
+
+      active_directory_v2 {
+        client_id                       = try(var.configuration.auth_settings_v2.active_directory_v2.client_id, null)
+        tenant_auth_endpoint            = try(var.configuration.auth_settings_v2.active_directory_v2.tenant_auth_endpoint, null)
+        #        allowed_applications            = []
+        #        allowed_audiences               = []
+        #        allowed_groups                  = []
+        #        allowed_identities              = []
+        #        jwt_allowed_client_applications = []
+        #        jwt_allowed_groups              = []
+        #        login_parameters                = {}
+        #        www_authentication_disabled     = false
+      }
+
+      #      apple_v2 {
+      #        login_scopes = []
+      #      }
+
+      #      azure_static_web_app_v2 {
+      #        client_id = "agreeable-water-02add0e03.3.azurestaticapps.net"
+      #      }
+
+      #      facebook_v2 {
+      #        login_scopes = []
+      #      }
+
+      #      github_v2 {
+      #        login_scopes = []
+      #      }
+
+      #      google_v2 {
+      #        allowed_audiences = []
+      #        login_scopes      = []
+      #      }
+
+      #      login {
+      #        allowed_external_redirect_urls    = []
+      #        cookie_expiration_convention      = "FixedTime"
+      #        cookie_expiration_time            = "08:00:00"
+      #        nonce_expiration_time             = "00:05:00"
+      #        preserve_url_fragments_for_logins = false
+      #        token_refresh_extension_time      = 72
+      #        token_store_enabled               = false
+      #        validate_nonce                    = true
+      #      }
+
+      #      microsoft_v2 {
+      #        allowed_audiences = []
+      #        login_scopes      = []
+      #      }
+
+      #      twitter_v2 {}
+    }
+  }
+
   site_config {
     always_on                                     = try(var.configuration.site_config.always_on, true)
     container_registry_managed_identity_client_id = try(var.configuration.site_config.container_registry_managed_identity_client_id, null)
