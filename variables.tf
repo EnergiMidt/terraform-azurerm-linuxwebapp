@@ -98,3 +98,9 @@ variable "https_only" {
   default     = true
   type        = bool
 }
+
+variable "public_network_access_enabled" {
+  description = "(Optional) Should the Linux Web App require HTTPS connections. Defaults to `true`."
+  default     = true
+  type        = bool
+}
