@@ -100,7 +100,7 @@ variable "https_only" {
 }
 
 variable "public_network_access_enabled" {
-  description = "(Optional) Should the Linux Web App require HTTPS connections. Defaults to `true`."
+  description = "(Optional) Should public network access be enabled for the Web App. Only private endpoints allow access if disabled. Defaults to `true`."
   default     = true
   type        = bool
 }
