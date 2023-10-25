@@ -98,3 +98,9 @@ variable "https_only" {
   default     = true
   type        = bool
 }
+
+variable "public_network_access_enabled" {
+  description = "(Optional) Should public network access be enabled for the Web App. Only private endpoints allow access if disabled. Defaults to `true`."
+  default     = true
+  type        = bool
+}
