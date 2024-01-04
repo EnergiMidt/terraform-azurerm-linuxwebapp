@@ -34,7 +34,12 @@ resource "azurerm_linux_web_app" "linux_web_app" {
   dynamic "logs" {
     for_each = try(var.configuration.logs, null) != null ? [var.configuration.logs] : []
     content {
-      http_logs = var.configuration.logs.http_logs
+      http_logs = {
+        file_system = {
+          retention_in_days = var.configuration.logs.http_logs.file_system.retention_in_days
+          retention_in_mb = var.configuration.logs.http_logs.file_system.retention_in_mb
+        }
+      }
     }
   }
 
