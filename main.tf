@@ -34,18 +34,17 @@ resource "azurerm_linux_web_app" "linux_web_app" {
   dynamic "logs" {
     for_each = try(var.configuration.logs, null) != null ? [var.configuration.logs] : []
     content {
-      http_logs = try(var.configuration.logs.http_logs, null)
-#      dynamic "http_logs" {
-#        for_each = try(var.configuration.logs.http_logs, null) != null ? [var.configuration.logs.http_logs] : []
-#        content {
-#          dynamic "file_system" {
-#            for_each = try(var.configuration.logs.http_logs.file_system, null) != null ? [var.configuration.logs.http_logs.file_system] : []
-#            content {
-#              retention_in_days = var.configuration.logs.http_logs.file_system.retention_in_days
-#              retention_in_mb = var.configuration.logs.http_logs.file_system.retention_in_mb
-#            }
-#        }
- #     }
+      dynamic "http_logs" {
+        for_each = try(var.configuration.logs.http_logs, null) != null ? [var.configuration.logs.http_logs] : []
+        content {
+          dynamic "file_system" {
+            for_each = try(var.configuration.logs.http_logs.file_system, null) != null ? [var.configuration.logs.http_logs.file_system] : []
+            content {
+              retention_in_days = var.configuration.logs.http_logs.file_system.retention_in_days
+              retention_in_mb = var.configuration.logs.http_logs.file_system.retention_in_mb
+            }
+        }
+      }
     }
   }
 
