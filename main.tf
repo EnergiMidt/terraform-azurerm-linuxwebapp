@@ -31,6 +31,26 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     vnet_route_all_enabled = try(var.configuration.site_config.vnet_route_all_enabled, false)
   }
 
+  dynamic "logs" {
+    for_each = try(var.configuration.logs, null) != null ? [var.configuration.logs] : []
+    content {
+      dynamic "http_logs" {
+        for_each = try(var.configuration.logs.http_logs, null) != null ? [var.configuration.logs.http_logs] : []
+        content {
+          dynamic "file_system" {
+            for_each = try(var.configuration.logs.http_logs.file_system, null) != null ? [
+              var.configuration.logs.http_logs.file_system
+            ] : []
+            content {
+              retention_in_days = var.configuration.logs.http_logs.file_system.retention_in_days
+              retention_in_mb   = var.configuration.logs.http_logs.file_system.retention_in_mb
+            }
+          }
+        }
+      }
+    }
+  }
+
   # The AzureRM Terraform provider provides regional virtual network integration
   # via the standalone resource `app_service_virtual_network_swift_connection`
   # and in-line within this resource using the `virtual_network_subnet_id` property.
