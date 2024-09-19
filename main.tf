@@ -35,8 +35,9 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     dynamic "ip_restriction" {
       for_each = try(var.configuration.ip_restriction, null) != null ? var.configuration.ip_restriction : []
       content {
+        name       = try(ip_restriction.value.name, "")
         ip_address = ip_restriction.value.ip_address
-        action = try(ip_restriction.value.action, "Allow")
+        action     = try(ip_restriction.value.action, "Allow")
       }
     }
   }
