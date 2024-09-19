@@ -29,6 +29,14 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     health_check_eviction_time_in_min = try(var.configuration.site_config.health_check_eviction_time_in_min, null)
 
     vnet_route_all_enabled = try(var.configuration.site_config.vnet_route_all_enabled, false)
+
+    dynamic "ip_restriction" {
+      for_each = try(var.configuration.ip_restriction, null) != null ? var.configuration.ip_restriction : []
+      content {
+        ip_address = ip_restriction.value.ip_address
+        action = try(ip_restriction.value.action, "Allow")
+      }
+    }
   }
 
   dynamic "logs" {
