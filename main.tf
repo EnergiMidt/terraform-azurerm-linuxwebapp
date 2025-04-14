@@ -33,8 +33,8 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     ip_restriction_default_action = try(var.configuration.ip_restriction_default_action, "Allow")
 
     application_stack {
-      docker_image_name        = try(var.configuration.site_config.application_stack.docker_image_name, null)
-      docker_registry_url      = try(var.configuration.site_config.application_stack.docker_registry_url, null)
+      docker_image_name        = try(var.configuration.site_config.application_stack.docker_image_name, "index.docker.io/nginx:mainline")
+      docker_registry_url      = try(var.configuration.site_config.application_stack.docker_registry_url, "https://index.docker.io")
       docker_registry_username = try(var.configuration.site_config.application_stack.docker_registry_username, null)
       docker_registry_password = try(var.configuration.site_config.application_stack.docker_registry_password, null)
       java_version             = try(var.configuration.site_config.application_stack.java_version, null)
@@ -87,7 +87,8 @@ resource "azurerm_linux_web_app" "linux_web_app" {
 
   lifecycle {
     ignore_changes = [
-      virtual_network_subnet_id
+      virtual_network_subnet_id,
+      site_config[0].application_stack[0].docker_image_name
     ]
   }
 
