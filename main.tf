@@ -26,11 +26,24 @@ resource "azurerm_linux_web_app" "linux_web_app" {
     container_registry_use_managed_identity       = try(var.configuration.site_config.container_registry_use_managed_identity, false)
 
     health_check_path                 = try(var.configuration.site_config.health_check_path, null)
-    health_check_eviction_time_in_min = try(var.configuration.site_config.health_check_eviction_time_in_min, null)
+    health_check_eviction_time_in_min = try(var.configuration.site_config.health_check_eviction_time_in_min, 2)
 
     vnet_route_all_enabled = try(var.configuration.site_config.vnet_route_all_enabled, false)
 
     ip_restriction_default_action = try(var.configuration.ip_restriction_default_action, "Allow")
+
+    application_stack {
+      docker_image_name        = try(var.configuration.site_config.application_stack.docker_image_name, "index.docker.io/nginx:mainline")
+      docker_registry_url      = try(var.configuration.site_config.application_stack.docker_registry_url, "https://index.docker.io")
+      docker_registry_username = try(var.configuration.site_config.application_stack.docker_registry_username, null)
+      docker_registry_password = try(var.configuration.site_config.application_stack.docker_registry_password, null)
+      java_version             = try(var.configuration.site_config.application_stack.java_version, null)
+      dotnet_version           = try(var.configuration.site_config.application_stack.dotnet_version, null)
+      python_version           = try(var.configuration.site_config.application_stack.python_version, null)
+      node_version             = try(var.configuration.site_config.application_stack.node_version, null)
+      go_version               = try(var.configuration.site_config.application_stack.go_version, null)
+      php_version              = try(var.configuration.site_config.application_stack.php_version, null)
+    }
 
     dynamic "ip_restriction" {
       for_each = try(var.configuration.ip_restriction, null) != null ? var.configuration.ip_restriction : []
@@ -74,7 +87,8 @@ resource "azurerm_linux_web_app" "linux_web_app" {
 
   lifecycle {
     ignore_changes = [
-      virtual_network_subnet_id
+      virtual_network_subnet_id,
+      site_config[0].application_stack[0].docker_image_name
     ]
   }
 
