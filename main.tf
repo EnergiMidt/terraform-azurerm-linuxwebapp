@@ -94,6 +94,18 @@ resource "azurerm_linux_web_app" "linux_web_app" {
 
   tags = var.tags
 
+  dynamic "storage_account" {
+    for_each = var.storage_mounts
+    content {
+      name         = storage_account.value.name
+      type         = storage_account.value.type
+      account_name = storage_account.value.account_name
+      share_name   = storage_account.value.share_name
+      access_key   = storage_account.value.access_key
+      mount_path   = storage_account.value.mount_path
+    }
+  }
+
   # checkov:skip=CKV_AZURE_13: Ensure App Service Authentication is set on Azure App Service. https://docs.bridgecrew.io/docs/bc_azr_general_2
   # checkov:skip=CKV_AZURE_17: Ensure the web app has 'Client Certificates (Incoming client certificates)' set. https://docs.bridgecrew.io/docs/bc_azr_networking_7
   # checkov:skip=CKV_AZURE_18: Ensure that 'HTTP Version' is the latest if used to run the web app. https://docs.bridgecrew.io/docs/bc_azr_networking_8
