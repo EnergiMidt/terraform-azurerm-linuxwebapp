@@ -104,16 +104,3 @@ variable "public_network_access_enabled" {
   default     = true
   type        = bool
 }
-
-variable "storage_mounts" {
-  description = "Storage account mounts for the app service"
-  type = list(object({
-    name         = string
-    type         = string
-    account_name = string
-    share_name   = string
-    access_key   = string
-    mount_path   = string
-  }))
-  default = []
-}
